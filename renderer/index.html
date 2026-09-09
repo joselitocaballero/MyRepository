@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Beacon Onboard</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Beacon Onboarding</h1>
+      <p class="subtitle">
+        Runs <code>/beacon-investigate-site</code> and
+        <code>/beacon-manifest</code> from chat-sdk through the Claude Code
+        CLI. Nothing here is a substitute for reading each run's log.
+      </p>
+    </header>
+
+    <section class="card" id="settings-card">
+      <button class="card-toggle" id="settings-toggle" type="button">
+        Settings <span id="settings-caret">▾</span>
+      </button>
+      <div id="settings-body">
+        <label class="field">
+          <span>chat-sdk checkout path</span>
+          <input type="text" id="chatSdkPath" placeholder="C:\Users\you\chat-sdk" />
+        </label>
+        <label class="checkbox-field warning">
+          <input type="checkbox" id="skipPermissions" />
+          <span>
+            Skip permission prompts (<code>--dangerously-skip-permissions</code>).
+            Off by default — with this on, the run can use any tool
+            (including writes) without asking. Only enable it if you trust
+            what the skill will do.
+          </span>
+        </label>
+        <button id="saveSettings" type="button">Save settings</button>
+        <span id="settingsSaved" class="saved-hint"></span>
+      </div>
+    </section>
+
+    <section class="card step" id="investigate-card">
+      <div class="step-header">
+        <h2>1. Investigate a site</h2>
+        <span class="status-pill" id="investigate-status">idle</span>
+      </div>
+      <label class="field">
+        <span>Site URL</span>
+        <input
+          type="text"
+          id="investigateUrl"
+          placeholder="https://www.example.com"
+        />
+      </label>
+      <div class="button-row">
+        <button id="runInvestigate" type="button">Run investigation</button>
+        <button id="stopInvestigate" type="button" class="secondary" hidden>
+          Stop
+        </button>
+      </div>
+      <details class="log-details" open>
+        <summary>Log</summary>
+        <pre class="log" id="investigateLog"></pre>
+      </details>
+      <div class="result" id="investigateResult" hidden>
+        <h3>Integration plan</h3>
+        <div class="result-path" id="investigatePlanPath"></div>
+        <div class="button-row">
+          <button id="openPlan" type="button" class="secondary">
+            Open file
+          </button>
+          <button id="showPlanInFolder" type="button" class="secondary">
+            Show in folder
+          </button>
+        </div>
+        <details>
+          <summary>Preview</summary>
+          <pre class="preview" id="investigatePlanPreview"></pre>
+        </details>
+      </div>
+    </section>
+
+    <section class="card step" id="manifest-card">
+      <div class="step-header">
+        <h2>2. Generate manifest</h2>
+        <span class="status-pill" id="manifest-status">idle</span>
+      </div>
+      <p class="hint">
+        Review the plan above before running this — it decides what goes
+        into the manifest.
+      </p>
+      <label class="field">
+        <span>Plan file (auto-filled after step 1, editable)</span>
+        <input type="text" id="manifestPlanPath" placeholder="docs/customer-research/example-beacon-research.md" />
+      </label>
+      <label class="field">
+        <span>appId</span>
+        <input
+          type="text"
+          id="manifestAppId"
+          placeholder="ai-commerce-demo.com-example.com"
+        />
+      </label>
+      <div class="two-col">
+        <label class="field">
+          <span>Cluster host (optional — leave blank to skip upload)</span>
+          <input type="text" id="manifestClusterHost" placeholder="e.g. master.gladly.qa" />
+        </label>
+        <label class="field">
+          <span>Org ID (optional)</span>
+          <input type="text" id="manifestOrgId" placeholder="org id" />
+        </label>
+      </div>
+      <label class="checkbox-field warning">
+        <input type="checkbox" id="ackLintWarnings" />
+        <span>
+          Acknowledge manifest lint warnings and continue anyway
+          (<code>ACK_LINT_WARNINGS=1</code>). Only check this after you've
+          read the warnings in a prior run's log.
+        </span>
+      </label>
+      <div class="button-row">
+        <button id="runManifest" type="button">Generate manifest</button>
+        <button id="stopManifest" type="button" class="secondary" hidden>
+          Stop
+        </button>
+      </div>
+      <details class="log-details" open>
+        <summary>Log</summary>
+        <pre class="log" id="manifestLog"></pre>
+      </details>
+      <div class="result" id="manifestResult" hidden>
+        <h3>Manifest file</h3>
+        <div class="result-path" id="manifestFilePath"></div>
+        <div class="button-row">
+          <button id="openManifest" type="button" class="secondary">
+            Open file
+          </button>
+          <button id="showManifestInFolder" type="button" class="secondary">
+            Show in folder
+          </button>
+        </div>
+        <details>
+          <summary>Preview</summary>
+          <pre class="preview" id="manifestPreview"></pre>
+        </details>
+      </div>
+    </section>
+
+    <script src="renderer.js"></script>
+  </body>
+</html>
