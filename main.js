@@ -131,7 +131,11 @@ function startRun(prompt, { cwd, skipPermissions, extraEnv }) {
 }
 
 ipcMain.handle("run:investigate", (_evt, { url, cwd, skipPermissions }) => {
-  const prompt = `/beacon-investigate-site ${url}`;
+  // Headless `claude -p` matches the whole first line as the command name,
+  // unlike the interactive REPL which splits on the first space — an inline
+  // argument (`/beacon-investigate-site https://...`) makes it report
+  // "Unknown command". Putting the argument on its own line avoids that.
+  const prompt = `/beacon-investigate-site\n${url}`;
   return startRun(prompt, { cwd, skipPermissions });
 });
 
